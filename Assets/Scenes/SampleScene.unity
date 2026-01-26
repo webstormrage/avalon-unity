@@ -1803,6 +1803,8 @@ MonoBehaviour:
   - {fileID: 1676989092}
   - {fileID: 1686637535}
   controllerMap: {fileID: 11400000, guid: 402047283e3ef57469ef5fc7d5067a48, type: 2}
+  standardMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  strokeMaterial: {fileID: 2100000, guid: f90dc18dbaff55045bf56b0dfd01377f, type: 2}
 --- !u!4 &911843179
 Transform:
   m_ObjectHideFlags: 0
