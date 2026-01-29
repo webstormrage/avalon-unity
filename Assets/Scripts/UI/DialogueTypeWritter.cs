@@ -78,29 +78,45 @@ public class DialogueTypeWritter : MonoBehaviour
         typingCoroutine = StartCoroutine(TypeRoutine(text));
     }
 
-private IEnumerator TypeRoutine(string text)
-{
-    dialogueText.text = text;
-    dialogueText.maxVisibleCharacters = 0;
-
-    Canvas.ForceUpdateCanvases();
-
-    // 👇 ВСЕГДА начинаем с верха
-    scrollRect.verticalNormalizedPosition = 1f;
-
-    int totalChars = dialogueText.textInfo.characterCount;
-    float delay = 1f / charsPerSecond;
-
-    for (int i = 0; i <= totalChars; i++)
+    private IEnumerator TypeRoutine(string text)
     {
-        dialogueText.maxVisibleCharacters = i;
+      isTyping = true;
+
+      dialogueText.text = text;
+      dialogueText.maxVisibleCharacters = 0;
+
+      Canvas.ForceUpdateCanvases();
+
+      int totalChars = dialogueText.textInfo.characterCount;
+      float delay = 1f / charsPerSecond;
+
+      const int scrollDelayChars = 350;
+
+       // стартуем сверху
+       scrollRect.verticalNormalizedPosition = 1f;
+
+       int scrollableChars = Mathf.Max(1, totalChars - scrollDelayChars);
+
+        for (int i = 0; i <= totalChars; i++)
+        {
+           dialogueText.maxVisibleCharacters = i;
+
+           if (i > scrollDelayChars)
+           {
+              float t = (float)(i - scrollDelayChars) / scrollableChars;
+              t = Mathf.Clamp01(t);
+
+              scrollRect.verticalNormalizedPosition = 1f - t;
+          }
+
         yield return new WaitForSeconds(delay);
     }
 
-    // 👇 В КОНЦЕ — в самый низ
-    scrollRect.verticalNormalizedPosition = 0f;
-}
+       // гарантированно в самый низ
+       scrollRect.verticalNormalizedPosition = 0f;
 
+       isTyping = false;
+    }
 
     private void FinishTyping()
     {
