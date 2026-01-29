@@ -13,7 +13,7 @@ public class GameStateBootstrap : MonoBehaviour
                 fails = 2,
                 skipsCount = 0,
                 leaderPosition = 4,
-                speakerPosition = 5,
+                speakerPosition = 3,
                 missionPriority = 5,
                 gameState = "MISSION"
             },

@@ -9,6 +9,9 @@ public class PlayerAnimatorControllerBinder : MonoBehaviour
     [SerializeField] private Material standardMaterial;
     [SerializeField] private Material strokeMaterial;
 
+    public static event System.Action OnPlayersVisualsReady;
+    private bool visualsDirty;
+
     void Start()
     {
         var gsm = GameStateManager.Instance;
@@ -81,6 +84,9 @@ public class PlayerAnimatorControllerBinder : MonoBehaviour
             var role = RoleIndex(dto.role);
             animator.SetInteger("Role", (int)role);
 
+            // 🔥 принудительно ставим нужный state
+            animator.Play(RoleStateName(role), 0, 0f);
+
              // ---------- SpriteRenderer / Material ----------
             var spriteRenderer = view.GetComponentInChildren<SpriteRenderer>();
             if (spriteRenderer == null)
@@ -92,6 +98,27 @@ public class PlayerAnimatorControllerBinder : MonoBehaviour
                     ? strokeMaterial
                     : standardMaterial;
         }
+        visualsDirty = true;
+    }
+
+    void LateUpdate()
+    {
+      if (!visualsDirty)
+          return;
+
+      visualsDirty = false;
+      OnPlayersVisualsReady?.Invoke();
+    }
+
+    private static string RoleStateName(int role)
+    {
+        return role switch
+        {
+            0 => "loyal",
+            1 => "merlin",
+            2 => "minion",
+            3  => "assassin"
+        };
     }
 
     private static int RoleIndex(string role)
