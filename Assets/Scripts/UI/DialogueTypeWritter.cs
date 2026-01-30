@@ -5,12 +5,10 @@ using UnityEngine.UI;
 
 public class DialogueTypeWritter : MonoBehaviour
 {
-    [Header("UI")]
-    [SerializeField] private TextMeshProUGUI dialogueText;
+    [Header("UI")] [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private ScrollRect scrollRect;
 
-    [Header("Typing")]
-    [SerializeField] private float charsPerSecond = 30f;
+    [Header("Typing")] [SerializeField] private float charsPerSecond = 30f;
 
     private Coroutine typingCoroutine;
     private bool isTyping;
@@ -80,42 +78,42 @@ public class DialogueTypeWritter : MonoBehaviour
 
     private IEnumerator TypeRoutine(string text)
     {
-      isTyping = true;
+        isTyping = true;
 
-      dialogueText.text = text;
-      dialogueText.maxVisibleCharacters = 0;
+        dialogueText.text = text;
+        dialogueText.maxVisibleCharacters = 0;
 
-      Canvas.ForceUpdateCanvases();
+        Canvas.ForceUpdateCanvases();
 
-      int totalChars = dialogueText.textInfo.characterCount;
-      float delay = 1f / charsPerSecond;
+        int totalChars = dialogueText.textInfo.characterCount;
+        float delay = 1f / charsPerSecond;
 
-      const int scrollDelayChars = 350;
+        const int scrollDelayChars = 350;
 
-       // стартуем сверху
-       scrollRect.verticalNormalizedPosition = 1f;
+        // стартуем сверху
+        scrollRect.verticalNormalizedPosition = 1f;
 
-       int scrollableChars = Mathf.Max(1, totalChars - scrollDelayChars);
+        int scrollableChars = Mathf.Max(1, totalChars - scrollDelayChars);
 
         for (int i = 0; i <= totalChars; i++)
         {
-           dialogueText.maxVisibleCharacters = i;
+            dialogueText.maxVisibleCharacters = i;
 
-           if (i > scrollDelayChars)
-           {
-              float t = (float)(i - scrollDelayChars) / scrollableChars;
-              t = Mathf.Clamp01(t);
+            if (i > scrollDelayChars)
+            {
+                float t = (float)(i - scrollDelayChars) / scrollableChars;
+                t = Mathf.Clamp01(t);
 
-              scrollRect.verticalNormalizedPosition = 1f - t;
-          }
+                scrollRect.verticalNormalizedPosition = 1f - t;
+            }
 
-        yield return new WaitForSeconds(delay);
-    }
+            yield return new WaitForSeconds(delay);
+        }
 
-       // гарантированно в самый низ
-       scrollRect.verticalNormalizedPosition = 0f;
+        // гарантированно в самый низ
+        scrollRect.verticalNormalizedPosition = 0f;
 
-       isTyping = false;
+        isTyping = false;
     }
 
     private void FinishTyping()
@@ -147,19 +145,19 @@ public class DialogueTypeWritter : MonoBehaviour
     }
 
     private void DebugScrollState(string label)
-{
-    var content = scrollRect.content;
-    var viewport = scrollRect.viewport;
+    {
+        var content = scrollRect.content;
+        var viewport = scrollRect.viewport;
 
-    Debug.Log(
-        $"[{label}]\n" +
-        $"Content height: {content.rect.height}\n" +
-        $"Viewport height: {viewport.rect.height}\n" +
-        $"Overflow: {content.rect.height > viewport.rect.height}\n" +
-        $"Scroll pos (normalized): {scrollRect.verticalNormalizedPosition}\n" +
-        $"Content pivot: {content.pivot}\n" +
-        $"Viewport pivot: {viewport.pivot}\n" +
-        $"ScrollRect pivot: {((RectTransform)scrollRect.transform).pivot}"
-    );
-}
+        Debug.Log(
+            $"[{label}]\n" +
+            $"Content height: {content.rect.height}\n" +
+            $"Viewport height: {viewport.rect.height}\n" +
+            $"Overflow: {content.rect.height > viewport.rect.height}\n" +
+            $"Scroll pos (normalized): {scrollRect.verticalNormalizedPosition}\n" +
+            $"Content pivot: {content.pivot}\n" +
+            $"Viewport pivot: {viewport.pivot}\n" +
+            $"ScrollRect pivot: {((RectTransform)scrollRect.transform).pivot}"
+        );
+    }
 }
